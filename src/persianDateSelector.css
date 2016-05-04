@@ -1,0 +1,86 @@
+﻿.dropdown-menu{
+    padding:0px;
+    border-radius:15px;
+}
+
+table{
+    width:350px;
+    height:300px;
+    font-family:'B Yekan',Arial;
+    font-size:12pt;
+    border:none;
+    border-radius:15px;
+}
+
+.arrow:hover{
+    cursor:pointer;
+}
+
+a:hover{
+    text-decoration:none;
+}
+
+tr:first-child td:first-child {
+    border-top-right-radius:15px;
+}
+
+tr:first-child td:last-child{
+    border-top-left-radius:15px;
+}
+
+
+tr:nth-child(1){
+    background-color:rgb(165,198,222);
+    font-size:30pt;
+}
+
+tr:nth-child(2){
+    background-color:rgb(111,165,203);
+    font-size:20pt;
+}
+
+tr:nth-child(1) td, tr:nth-child(2) td{
+    font-weight:bolder;
+    border:none;
+    color:whitesmoke;
+    height:24px;
+}
+
+td,th{
+    text-align:center;
+}
+
+th{
+    font-family:'B Titr'; 
+    height:30px;
+    line-height:25px;
+    vertical-align:top;
+}
+
+tr:nth-child(3){
+    height:30px;
+    font-weight:bolder;
+    border-top:2px solid #0094ff;
+}
+
+tr:nth-last-child(2){
+    font-weight:bolder;
+    border-top:2px solid #0094ff;
+}
+
+tr:nth-last-child(-n+2) td{
+    border:none;
+    text-align:right;
+    padding-right:10px;
+}
+
+tr:last-child td{
+    color:dodgerblue;
+    font-size:10pt;
+}
+
+tr:last-child td:hover{
+    color:#2a6496;
+    cursor:pointer;
+    text-decoration:none;
+}

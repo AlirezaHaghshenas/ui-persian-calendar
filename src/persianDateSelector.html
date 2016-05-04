@@ -1,0 +1,61 @@
+﻿<div>
+    <style>
+        .selected {
+            background-color: rgb(105,180,248);
+        }
+    </style>
+    <table border="1" dir="rtl" cellpadding="0" cellspacing="0">
+        <tr>
+            <td title="بعدی" class="arrow" ng-click="nextYear(year);">
+                <img src="../Content/datepicker/Arrow-Right.png" />
+            </td>
+            <td colspan="5">
+                {{activeInfo.year}}
+                <!--<span uib-dropdown on-toggle="toggled(open)">
+                    <a href uib-dropdown-toggle>{{activeInfo.year}}</a>
+                    <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                        <li ng-repeat="choice in years">
+                            <a href>{{choice}}</a>
+                        </li>
+                    </ul>
+                </span>-->
+            </td>
+            <td title="قبلی" class="arrow" ng-click="previousYear(year);">
+                <img src="../Content/datepicker/Arrow-Left.png" />
+            </td>
+        </tr>
+        <tr>
+            <td class="arrow" title="بعدی" ng-click="nextMonth(month);">
+                <img src="../Content/datepicker/Arrow-Right.png" />
+            </td>
+            <td colspan="5">{{MonthName}}</td>
+            <td class="arrow" title="قبلی" ng-click="previousMonth(month)">
+                <img src="../Content/datepicker/Arrow-Left.png" />
+            </td>
+        </tr>
+        <tr>
+            <th>ش</th>
+            <th>ی</th>
+            <th>د</th>
+            <th>س</th>
+            <th>چ</th>
+            <th>پ</th>
+            <th>ج</th>
+        </tr>
+        <tr ng-repeat="week in weeks">
+            <td ng-repeat="day in week" ng-click="selectDate(day)" ng-class="{'selected': day.day == $parent.$parent.activeInfo.day}">
+                {{day.day}}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="7">{{dayOfWeek}}&nbsp;{{activeInfo.year}}/{{activeInfo.month}}/{{activeInfo.day}} </td>
+            <!--<td colspan="3">{{dayOfWeek}}</td>
+            <td colspan="1">{{activeInfo.day}}</td>
+            <td colspan="1">{{activeInfo.month}}</td>
+            <td colspan="2">{{activeInfo.year}}</td>-->
+        </tr>
+        <tr>
+            <td colspan="7" ng-click="goToday(now)">امروز : {{now[0]}}/{{now[1]}}/{{now[2]}}</td>
+        </tr>
+    </table>
+</div>
