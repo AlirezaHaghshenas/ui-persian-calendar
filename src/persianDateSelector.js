@@ -15,6 +15,7 @@
 			$scope.dayOfWeek;
 			$scope.time = $scope.time || '00:00:00.000Z';
 			$scope.monthNames = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+			$scope.dayNames = ['شنبه', 'یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
 
 			var leftPad = function (str, len, padChar) {
 				str = str.toString();
@@ -50,9 +51,7 @@
 			$scope.selectDate = function (day) {
 				if (day) {
 					$scope.activeInfo.day = day.day;
-					if (day.dayOfWeek == 0)
-						day.dayOfWeek = 7;
-					$scope.dayOfWeek = PERSIAN_WEEKDAYS[parseInt(day.dayOfWeek) - 1];
+					$scope.dayOfWeek = $scope.dayNames[parseInt(day.dayOfWeek) - 1];
 				}
 
 				var dateParts = jd_to_gregorian(persian_to_jd($scope.activeInfo.year, $scope.activeInfo.month, $scope.activeInfo.day));
@@ -158,7 +157,7 @@
 					$scope.month = persianDate[1];
 					$scope.MonthName = $scope.monthNames[$scope.month - 1];
 					$scope.activeInfo.day = persianDate[2];
-					$scope.dayOfWeek = PERSIAN_WEEKDAYS[mod(jwday(persian_to_jd($scope.year, $scope.month, $scope.activeInfo.day)), 7)];
+					$scope.dayOfWeek = $scope.dayNames[mod(jwday(persian_to_jd($scope.year, $scope.month, $scope.activeInfo.day)) + 1, 7)];
 				}
 			});
 
