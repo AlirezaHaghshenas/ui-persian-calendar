@@ -1,4 +1,59 @@
-﻿angular.module('ui.persianDateSelector', ['ui.bootstrap'])
+﻿function leftPad(str, len, padChar) {
+				str = str.toString();
+				while (str.length < len) {
+					str = padChar + str;
+				}
+				return str;
+			};
+
+angular.module('ui.persianDateSelector', ['ui.bootstrap'])
+.directive('persianDate', function () {
+	return {
+		restrict: 'A',
+		require: 'ngModel',
+		link: function (scope, element, attr, ngModel) {
+			ngModel.$parsers.push(function (text) {
+				if (text == null){
+					return null;
+				}
+				var parts = text.split('/');
+				if (parts.length != 3) {
+					return null;
+				}
+				var y = parseInt(parts[0]);
+				var m = parseInt(parts[1]);
+				var d = parseInt(parts[2]);
+				if (m < 1 || m > 12 || d < 1 || d > 31) {
+					return null;
+				}
+				var greg = jd_to_gregorian(persian_to_jd(y, m, d));
+				return leftPad(greg[0], 4, '0') + '-' + leftPad(greg[1], 2, '0') + '-' + leftPad(greg[2], 2, '0') + 'T00:00:00.000Z';
+			});
+
+			ngModel.$formatters.push(function (date) {
+				if (date == null){
+					return null;
+				}
+				var parts = date.split('T');
+				if (parts.length != 2){
+					return null;
+				}
+				parts = parts[0].split('-');
+				if (parts.length != 3){
+					return null;
+				}
+				var y = parseInt(parts[0]);
+				var m = parseInt(parts[1]);
+				var d = parseInt(parts[2]);
+				if (m < 1 || m > 12 || d < 1 || d > 31){
+					return null;
+				}
+				var pers = jd_to_persian(gregorian_to_jd(y, m, d));
+				return leftPad(pers[0], 4, '0') + '/' +leftPad(pers[1], 2, '0') + '/' +leftPad(pers[2], 2, '0');
+			});
+		}
+	};
+})
 .directive('uiPersianDateSelector', function () {
 	return {
 		restrict: 'E',
@@ -16,14 +71,6 @@
 			$scope.time = $scope.time || '00:00:00.000Z';
 			$scope.monthNames = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
 			$scope.dayNames = ['شنبه', 'یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
-
-			var leftPad = function (str, len, padChar) {
-				str = str.toString();
-				while (str.length < len) {
-					str = padChar + str;
-				}
-				return str;
-			};
 
 			$scope.today = function () {
 				var today = new Date();
@@ -106,6 +153,7 @@
 				}
 				$scope.activeInfo.year = year;
 				$scope.activeInfo.month = month;
+				$scope.MonthName = $scope.monthNames[$scope.month - 1];
 				$scope.weeks = [];
 				var daysCount;
 				if (month <= 6) {
@@ -155,7 +203,6 @@
 					var persianDate = jd_to_persian(gregorian_to_jd(y, m, d));
 					$scope.year = persianDate[0];
 					$scope.month = persianDate[1];
-					$scope.MonthName = $scope.monthNames[$scope.month - 1];
 					$scope.activeInfo.day = persianDate[2];
 					$scope.dayOfWeek = $scope.dayNames[mod(jwday(persian_to_jd($scope.year, $scope.month, $scope.activeInfo.day)) + 1, 7)];
 				}
@@ -177,5 +224,17 @@
 			$scope.getTime();
 
 		}]
+	};
+})
+.directive('uiPersianDateEntryField', function () {
+	return {
+		restrict: 'E',
+		scope: {
+			date: '='
+		},
+		template: '<input type="text" persian-date ng-model="date" ui-mask="1399/99/99" ui-mask-placeholder ui-mask-placeholder-char="_" />',
+		controller: function(){
+			
+		}
 	};
 });
