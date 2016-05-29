@@ -12,6 +12,10 @@ table{
     border-radius:15px;
 }
 
+.arrow{
+    font-family: Glyphicons Halflings;
+}
+
 .arrow:hover{
     cursor:pointer;
 }
