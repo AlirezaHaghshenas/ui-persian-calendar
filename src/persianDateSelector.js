@@ -1,10 +1,10 @@
 ﻿function leftPad(str, len, padChar) {
-				str = str.toString();
-				while (str.length < len) {
-					str = padChar + str;
-				}
-				return str;
-			};
+	str = str.toString();
+	while (str.length < len) {
+		str = padChar + str;
+	}
+	return str;
+};
 
 angular.module('ui.persianDateSelector', ['ui.bootstrap'])
 .directive('persianDate', function () {
@@ -13,7 +13,7 @@ angular.module('ui.persianDateSelector', ['ui.bootstrap'])
 		require: 'ngModel',
 		link: function (scope, element, attr, ngModel) {
 			ngModel.$parsers.push(function (text) {
-				if (text == null){
+				if (text == null) {
 					return null;
 				}
 				var parts = text.split('/');
@@ -31,25 +31,25 @@ angular.module('ui.persianDateSelector', ['ui.bootstrap'])
 			});
 
 			ngModel.$formatters.push(function (date) {
-				if (date == null){
+				if (date == null) {
 					return null;
 				}
 				var parts = date.split('T');
-				if (parts.length != 2){
+				if (parts.length != 2) {
 					return null;
 				}
 				parts = parts[0].split('-');
-				if (parts.length != 3){
+				if (parts.length != 3) {
 					return null;
 				}
 				var y = parseInt(parts[0]);
 				var m = parseInt(parts[1]);
 				var d = parseInt(parts[2]);
-				if (m < 1 || m > 12 || d < 1 || d > 31){
+				if (m < 1 || m > 12 || d < 1 || d > 31) {
 					return null;
 				}
 				var pers = jd_to_persian(gregorian_to_jd(y, m, d));
-				return leftPad(pers[0], 4, '0') + '/' +leftPad(pers[1], 2, '0') + '/' +leftPad(pers[2], 2, '0');
+				return leftPad(pers[0], 4, '0') + '/' + leftPad(pers[1], 2, '0') + '/' + leftPad(pers[2], 2, '0');
 			});
 		}
 	};
@@ -60,7 +60,7 @@ angular.module('ui.persianDateSelector', ['ui.bootstrap'])
 		scope: {
 			date: '=',
 			time: '=?',
-			dateSelected:'=?'
+			dateSelected: '=?'
 		},
 		templateUrl: '../src/persianDateSelector.html',
 		controller: ['$scope', '$filter', function ($scope, $filter) {
@@ -69,7 +69,7 @@ angular.module('ui.persianDateSelector', ['ui.bootstrap'])
 			$scope.month;
 			$scope.MonthName;
 			$scope.dayOfWeek;
-			$scope.time = $scope.time || '00:00:00.000Z';
+			$scope.time = ($scope.time || '00:00:00.000').replace('Z', '');
 			$scope.monthNames = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
 			$scope.dayNames = ['شنبه', 'یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
 
@@ -103,8 +103,8 @@ angular.module('ui.persianDateSelector', ['ui.bootstrap'])
 				}
 
 				var dateParts = jd_to_gregorian(persian_to_jd($scope.activeInfo.year, $scope.activeInfo.month, $scope.activeInfo.day));
-				$scope.date = leftPad(dateParts[0], 4, '0') + '-' + leftPad(dateParts[1], 2, '0') + '-' + leftPad(dateParts[2], 2, '0') + 'T' + $scope.time;
-				if ($scope.dateSelected){
+				$scope.date = leftPad(dateParts[0], 4, '0') + '-' + leftPad(dateParts[1], 2, '0') + '-' + leftPad(dateParts[2], 2, '0') + 'T' + $scope.time + 'Z';
+				if ($scope.dateSelected) {
 					$scope.dateSelected($scope.date);
 				}
 			};
@@ -198,7 +198,7 @@ angular.module('ui.persianDateSelector', ['ui.bootstrap'])
 				if ($scope.date) {
 					var parts = $scope.date.split('T');
 					var date = parts[0].split('-');
-					$scope.time = parts[1];
+					$scope.time = (parts[1] || '00:00:00.000').replace('Z', '');
 
 					var y = parseInt(date[0]);
 					var m = parseInt(date[1]);
@@ -237,27 +237,27 @@ angular.module('ui.persianDateSelector', ['ui.bootstrap'])
 			date: '='
 		},
 		template: '<span><input type="text" persian-date ng-model="date" ui-mask="1399/99/99" ui-mask-placeholder ui-mask-placeholder-char="_" /><button type="button" class="glyphicon" ng-click="showPopup();"></button></span>',
-		controller:['$scope', '$uibModal', function($scope, $uibModal){
-			$scope.showPopup = function(){
-				$uibModal.open({	
-					animation:true,
-					template:'<ui-persian-date-selector date="date" date-selected="dateSelected" />',
-					controller:'uibPersianDateModalController',
-					resolve:{
-						'currentDate' : function(){
+		controller: ['$scope', '$uibModal', function ($scope, $uibModal) {
+			$scope.showPopup = function () {
+				$uibModal.open({
+					animation: true,
+					template: '<ui-persian-date-selector date="date" date-selected="dateSelected" />',
+					controller: 'uibPersianDateModalController',
+					resolve: {
+						'currentDate': function () {
 							return $scope.date;
 						}
 					}
-				}).result.then(function(date){
+				}).result.then(function (date) {
 					$scope.date = date;
 				});
 			};
 		}]
 	};
 })
-.controller('uibPersianDateModalController', ['$scope', 'currentDate', '$uibModalInstance', function($scope, currentDate, $uibModalInstance){
+.controller('uibPersianDateModalController', ['$scope', 'currentDate', '$uibModalInstance', function ($scope, currentDate, $uibModalInstance) {
 	$scope.date = currentDate;
-	$scope.dateSelected=function(date){
+	$scope.dateSelected = function (date) {
 		$uibModalInstance.close(date);
 	};
 }]);
